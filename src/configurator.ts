@@ -1,16 +1,12 @@
-const configuration = {};
+export class Configurator {
+    private configuration = {};
 
-class Configurator {
     public setResourceParameter(parameter: string, method: string, value: string) {
-        configuration[method] = configuration[method] || {};
-        configuration[method][parameter] = value;
+        this.configuration[method] = this.configuration[method] || {};
+        this.configuration[method][parameter] = value;
     }
 
     public getResourceConfig(method: string) {
-        return configuration[method];
+        return this.configuration[method];
     }
 }
-
-const configurator = new Configurator();
-
-export default configurator;

@@ -7,10 +7,10 @@ import {UsersProvider} from '../provider';
   templateUrl: './home.html'
 })
 export class Home {
+    private users;
+
     constructor(private usersProvider: UsersProvider) {
-        this.usersProvider.getUsers().subscribe(data => {
-            console.log(data);
-        });
+        this.users = this.usersProvider.getUsers();
 
         this.usersProvider.createUser({name: 'Giancarlo', surname: 'Buomprisco'}).subscribe(data => {
             console.log(data);

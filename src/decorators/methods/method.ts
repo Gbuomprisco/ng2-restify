@@ -1,32 +1,39 @@
-import configurator from '../../configurator';
 import { Observable } from 'rxjs/Observable';
 import { RequestOptionsBuilder } from '../../requestOptionsBuilder';
 
 const Route = require('route-parser');
 
-export function Method(method: string, config: any) {
-    return (target: any, propertyKey: string) => {
-        setPath(config, propertyKey);
+function initialize(target) {
+    if (!target.initialized) {
+        target.constructor();
+        target.initialized = true;
+    }
+}
 
-        const configuration = configurator.getResourceConfig(propertyKey);
+export function Method(method: string, parameters: any) {
+    return function(target: any, propertyKey: string) {
+        initialize(target);
+
+        target.configurator.setResourceParameter(
+            'path',
+            propertyKey,
+            new Route(typeof parameters === 'string' ? parameters : parameters.path)
+         );
+
+        const configuration = target.configurator.getResourceConfig(propertyKey);
 
         return {
-            value: function (params = {}): Observable<any> {
+            value: function (data = {}): Observable<any> {
                 const options = RequestOptionsBuilder(Object.assign(configuration, {
                     method,
                     baseUrl: this.baseUrl
-                }), params);
+                }), data);
 
-                return this.request(options, configuration);
+                const config = typeof parameters === 'string' ? configuration :
+                    Object.assign(configuration, parameters);
+
+                return this.request(options, config);
             }
         };
     };
-}
-
-function setPath(config: string | any,  methodName: string) {
-    if (typeof config === 'string') {
-        configurator.setResourceParameter('path', methodName, new Route(config));
-    } else {
-        configurator.setResourceParameter('path', methodName, new Route(config.path));
-    }
 }
