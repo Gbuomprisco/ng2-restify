@@ -30,3 +30,14 @@ Example
         @Path('/users')
         public createUser(body?): Observable<any> {return}
     }
+    
+    export class MyComponent {
+        constructor(private usersProvider: UsersProvider) {}
+        
+        ngOnInit() {
+          this.usersProvider.getUsers().subscribe(...); // will call GET /users
+          
+          this.usersProvider.getUserById({id; 3}).subscribe(...); // will call GET /users/3
+        }
+    
+    }
