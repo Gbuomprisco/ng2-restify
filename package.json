@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --inline --colors --progress --display-error-details --display-cached",
     "watch": "npm run build -- --watch",
-    "server": "webpack-dev-server --inline --colors --progress --display-error-details --display-cached --port 8000  --content-base ./demo",
+    "server": "webpack-dev-server --inline --colors --progress --display-error-details --display-cached --port 8080  --content-base ./demo",
     "start": "npm run server"
   },
   "contributors": [
@@ -20,6 +20,7 @@
     "css-loader": "^0.23.1",
     "raw-loader": "^0.5.1",
     "to-string-loader": "^1.1.4",
+    "tslint": "^3.15.1",
     "typescript": "^2.0.2",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0",

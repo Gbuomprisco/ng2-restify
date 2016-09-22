@@ -12,11 +12,11 @@ export class Home {
             console.log(data);
         });
 
-        this.usersProvider.createUser({name: "Giancarlo"}).subscribe(data => {
+        this.usersProvider.createUser({name: 'Giancarlo', surname: 'Buomprisco'}).subscribe(data => {
             console.log(data);
         });
 
-        this.usersProvider.getUserByid({id: 3}).subscribe(data => {
+        this.usersProvider.getUserByid({id: 1}).subscribe(data => {
             console.log(data);
         });
     }
