@@ -7,7 +7,7 @@ export function Put(target, propertyKey) {
     return {
         value: function(params = {}): Observable<any> {
             const options = {url: this.baseUrl + config.path.reverse(params), method: 'put'};
-            return this.request(options);
+            return this.request(options, config.transformer);
         }
     };
 }

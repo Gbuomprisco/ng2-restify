@@ -1,10 +1,9 @@
-const Route = require('route-parser');
 const configuration = {};
 
 class Configurator {
-    public setResourcePath(method: string, path: string) {
+    public setResourceParameter(parameter: string, method: string, value: string) {
         configuration[method] = configuration[method] || {};
-        configuration[method].path = new Route(path);
+        configuration[method][parameter] = value;
     }
 
     public getResourceConfig(method: string) {

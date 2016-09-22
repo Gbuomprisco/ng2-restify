@@ -8,7 +8,7 @@ export function Post(target, propertyKey) {
     return {
         value: function(data): Observable<any> {
             const options = {url: this.baseUrl + config.path.reverse(data), method: 'get'};
-            return this.request(options);
+            return this.request(options, config.transformer);
         }
     };
 }
