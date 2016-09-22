@@ -1,33 +1,33 @@
-## ng2-restify
+# ng2-restify
 
-Tiny REST Framework for Angular 2
+## Tiny REST Framework for Angular 2
+
+This is still very basic and experimental, package is not on NPM yet.
 
 Example
-
 
     import { Injectable } from '@angular/core';
     import { Http } from '@angular/http';
     import { Observable } from 'rxjs/Observable';
+    import { UserTransformer } from './transformers/userTransformer';
     
-    import { RestifyProvider, BaseUrl, Path, Get, Post } from 'ng2-restify';
+    import { RestifyProvider, BaseUrl, Get, Post, TransformResponse } from ng2-restify';
     
     @Injectable()
-    @BaseUrl('http://localhost:3001')
+    @BaseUrl('http://localhost:3000')
     export class UsersProvider extends RestifyProvider {
         constructor(public http: Http) {
             super(http);
         }
-
-        @Get
-        @Path('/users')
+    
+        @TransformResponse(UserTransformer)
+        @Get('/users')
         public getUsers(): Observable<any> {return}
     
-        @Get
-        @Path('/users/:id')
+        @Get({path: '/users/:id', cache: true})
         public getUserByid({id: number}): Observable<any> {return}
     
-        @Post
-        @Path('/users')
+        @Post('/users')
         public createUser(body?): Observable<any> {return}
     }
     
