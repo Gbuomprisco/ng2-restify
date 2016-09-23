@@ -1,3 +1,35 @@
-<div *ngFor="let user of users | async">
-    {{ user.name }} {{ user.surname }}
+<div>
+    <h2>Create new user</h2>
+
+    <form (submit)="submit()">
+        <p>
+            <label>
+                Name
+                <input [(ngModel)]="model.name" name="name" required>
+            </label>
+        </p>
+
+        <p>
+            <label>
+                Surname
+                <input [(ngModel)]="model.surname" name="surname" required>
+            </label>
+        </p>
+
+        <p>
+            <button type="submit">Create User</button>
+        </p>
+    </form>
+</div>
+
+<div>
+    <h2>Users</h2>
+
+    <div *ngFor="let user of users" (click)="selectUser(user)">
+        <p>
+            <span>{{ user.name }} {{ user.surname }}</span>
+
+            <button (click)="deleteUser(user.id)">Delete User</button>
+        </p>
+    </div>
 </div>

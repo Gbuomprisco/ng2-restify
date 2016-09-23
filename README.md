@@ -4,14 +4,23 @@
 
 This is still very basic and experimental, package is not on NPM yet.
 
-Example
-
+**Example**:
+    
+    // provider
     import { Injectable } from '@angular/core';
     import { Http } from '@angular/http';
     import { Observable } from 'rxjs/Observable';
     import { UserTransformer } from './transformers/userTransformer';
     
-    import { RestifyProvider, BaseUrl, Get, Post, TransformResponse } from ng2-restify';
+    import {
+        RestifyProvider,
+        BaseUrl,
+        Get,
+        Post,
+        Put,
+        Delete,
+        TransformResponse
+    } from '../../src';
     
     @Injectable()
     @BaseUrl('http://localhost:3000')
@@ -21,23 +30,92 @@ Example
         }
     
         @TransformResponse(UserTransformer)
-        @Get('/users')
-        public getUsers(): Observable<any> {return}
-    
-        @Get({path: '/users/:id', cache: true})
-        public getUserByid({id: number}): Observable<any> {return}
+        @Get({path: '/users', cache: true})
+        public getUsers(): Observable<any> {
+            return;
+        }
     
         @Post('/users')
-        public createUser(body?): Observable<any> {return}
+        public createUser(user): Observable<any> {
+            return;
+        }
+    
+        @Put('/users/:id')
+        public updateUser(user): Observable<any> {
+            return;
+        }
+    
+        @Delete('/users/:id')
+        public deleteUser(params: {id: number}): Observable<any> {
+            return;
+        }
     }
     
+    // component
     export class MyComponent {
         constructor(private usersProvider: UsersProvider) {}
         
-        ngOnInit() {
-          this.usersProvider.getUsers().subscribe(...); // will call GET /users
-          
-          this.usersProvider.getUserById({id; 3}).subscribe(...); // will call GET /users/3
-        }
-    
+        private users: User[] = [];
+            private selectedUser: User;
+        
+            private model: User = {
+                name: <string>undefined,
+                surname: <string>undefined
+            };
+        
+            constructor(private usersProvider: UsersProvider) {}
+        
+            public ngOnInit() {
+               this.usersProvider
+                   .getUsers()
+                   .subscribe(users => this.users = users);
+            }
+        
+            private createUser() {
+                const {name, surname} = this.model;
+        
+                this.usersProvider
+                    .createUser({name, surname})
+                    .subscribe(data => {
+                        this.users.push(data);
+                    });
+            }
+        
+            public submit() {
+                if (this.selectedUser) {
+                    this.updateUser();
+                } else {
+                    this.createUser();
+                }
+            }
+        
+            public updateUser() {
+                const {name, surname} = this.model;
+        
+                this.selectedUser = Object.assign({}, this.selectedUser, {
+                    name,
+                    surname
+                });
+        
+                this.usersProvider
+                    .updateUser(this.selectedUser)
+                    .subscribe(user => {
+                        const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+                        this.users[index] = user;
+                    });
+            }
+        
+            public deleteUser(id: number) {
+                this.usersProvider
+                    .deleteUser({id})
+                    .subscribe(user => {
+                        const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+                        this.users.splice(index, 1);
+                    });
+            }
+        
+            public selectUser(user: User) {
+                this.selectedUser = user;
+                this.model = Object.assign({}, user);
+            }
     }

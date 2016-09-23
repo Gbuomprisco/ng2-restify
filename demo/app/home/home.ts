@@ -1,23 +1,79 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UsersProvider} from '../provider';
+
+interface User {
+    name: string;
+    surname: string;
+    id?: number;
+}
 
 @Component({
   selector: 'home',
   styleUrls: ['./home.css'],
   templateUrl: './home.html'
 })
-export class Home {
-    private users;
+export class Home implements OnInit {
+    private users: User[] = [];
+    private selectedUser: User;
 
-    constructor(private usersProvider: UsersProvider) {
-        this.users = this.usersProvider.getUsers();
+    private model: User = {
+        name: <string>undefined,
+        surname: <string>undefined
+    };
 
-        this.usersProvider.createUser({name: 'Giancarlo', surname: 'Buomprisco'}).subscribe(data => {
-            console.log(data);
+    constructor(private usersProvider: UsersProvider) {}
+
+    public ngOnInit() {
+       this.usersProvider
+           .getUsers()
+           .subscribe(users => this.users = users);
+    }
+
+    private createUser() {
+        const {name, surname} = this.model;
+
+        this.usersProvider
+            .createUser({name, surname})
+            .subscribe(data => {
+                this.users.push(data);
+            });
+    }
+
+    public submit() {
+        if (this.selectedUser) {
+            this.updateUser();
+        } else {
+            this.createUser();
+        }
+    }
+
+    public updateUser() {
+        const {name, surname} = this.model;
+
+        this.selectedUser = Object.assign({}, this.selectedUser, {
+            name,
+            surname
         });
 
-        this.usersProvider.getUserByid({id: 1}).subscribe(data => {
-            console.log(data);
-        });
+        this.usersProvider
+            .updateUser(this.selectedUser)
+            .subscribe(user => {
+                const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+                this.users[index] = user;
+            });
+    }
+
+    public deleteUser(id: number) {
+        this.usersProvider
+            .deleteUser({id})
+            .subscribe(user => {
+                const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+                this.users.splice(index, 1);
+            });
+    }
+
+    public selectUser(user: User) {
+        this.selectedUser = user;
+        this.model = Object.assign({}, user);
     }
 }
