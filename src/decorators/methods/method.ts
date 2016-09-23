@@ -3,14 +3,16 @@ import { RequestOptionsBuilder } from '../../requestOptionsBuilder';
 
 const Route = require('route-parser');
 
-function initialize(target) {
-    if (!target.initialized) {
-        target.constructor();
-        target.initialized = true;
-    }
+export interface ConfigurationObject {
+    path: string;
+    cache?: boolean;
 }
 
-export function Method(method: string, parameters: any) {
+export function Method(method: string, parameters: string | ConfigurationObject) {
+    if (!parameters) {
+        throw new Error('Please provide a valid URL, or a valid configuration object');
+    }
+
     return function(target: any, propertyKey: string) {
         initialize(target);
 
@@ -36,4 +38,12 @@ export function Method(method: string, parameters: any) {
             }
         };
     };
+}
+
+
+function initialize(target) {
+    if (!target.initialized) {
+        target.constructor();
+        target.initialized = true;
+    }
 }

@@ -1,5 +1,5 @@
 import { Method } from './method';
 
-export function Post(config: string | any) {
+export function Post(config: string) {
     return Method('post', config);
 }

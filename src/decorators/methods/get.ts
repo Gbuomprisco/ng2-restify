@@ -1,5 +1,5 @@
-import { Method } from './method';
+import { Method, ConfigurationObject } from './method';
 
-export function Get(config: string | any) {
+export function Get(config: string | ConfigurationObject): Method {
     return Method('get', config);
 }
