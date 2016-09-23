@@ -1,4 +1,4 @@
-# ng2-restify
+# ng2-restify [![Build Status](https://travis-ci.org/Gbuomprisco/ng2-restify.svg?branch=master)](https://travis-ci.org/Gbuomprisco/ng2-restify)
 
 ## Tiny REST Framework for Angular 2
 
