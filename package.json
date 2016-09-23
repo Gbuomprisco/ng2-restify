@@ -7,7 +7,7 @@
     "watch": "npm run build -- --watch",
     "server": "webpack-dev-server --inline --colors --progress --display-error-details --display-cached --port 8080  --content-base ./demo",
     "start": "npm run server",
-    "test": "karma karma.conf.js --single-run",
+    "test": "karma start karma.conf.js --single-run",
     "prepublish": "./node_modules/.bin/tsc"
   },
   "contributors": [

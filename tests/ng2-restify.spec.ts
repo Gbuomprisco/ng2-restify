@@ -2,7 +2,7 @@ import { UsersProvider } from './testing-helpers';
 import { TestBed, inject } from '@angular/core/testing';
 
 import { BaseRequestOptions, Response, ResponseOptions, Http, HttpModule } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
+import { MockBackend, MockConnection } from '@angular/http/testing';
 
 describe('Ng2 Restify', () => {
     beforeEach(() => {
