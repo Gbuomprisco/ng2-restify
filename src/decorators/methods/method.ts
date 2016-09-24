@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import { RequestOptionsBuilder } from '../../requestOptionsBuilder';
 import { mergeHeaders } from '../headers';
+
 const Route = require('route-parser');
 
 export interface ConfigurationObject {
@@ -33,7 +34,7 @@ export function Method(method: string, parameters: string | ConfigurationObject)
         const configuration = target.configurator.getResourceConfig(propertyKey);
 
         return {
-            value: function (data = {}): Observable<any> {
+            value: function(data: {[key: string]: any} = {}): Observable<any> {
                 const headers = mergeHeaders(
                     target.configurator.getUniversalHeaders(),
                     target.headers,

@@ -181,7 +181,7 @@ export class UsersProvider extends RestifyProvider {
     constructor(public http: Http) {
         super(http);
     }
-}  
+}
 ```
 
 #### Local Headers (valid for the `method` they're used with)
