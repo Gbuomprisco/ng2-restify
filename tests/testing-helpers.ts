@@ -21,6 +21,11 @@ export class UsersProvider extends RestifyProvider {
         return;
     }
 
+    @Get('/users?name=(:name)')
+    public getUserByName(params: {name: string}): Observable<any> {
+        return;
+    }
+
     @Post('/users')
     public createUser(user): Observable<any> {
         return;

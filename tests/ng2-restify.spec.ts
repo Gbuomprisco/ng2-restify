@@ -87,6 +87,29 @@ describe('Ng2 Restify', () => {
                 done();
             });
         });
+
+        it('should perform a GET request to /users?name=myName', done => {
+            const response = {
+                name: 'name',
+                id: 3
+            };
+
+            backend.connections.subscribe((connection: MockConnection) => {
+                let options = new ResponseOptions({
+                    body: JSON.stringify(response)
+                });
+
+                expect(connection.request.method).toEqual(0);
+                expect(connection.request.url).toEqual(BASE_URL + '/users?name=myName');
+
+                connection.mockRespond(new Response(options));
+            });
+
+            usersProvider.getUserByName({name: 'myName'}).subscribe(data => {
+                expect(data).toEqual(response);
+                done();
+            });
+        });
     });
 
     describe('POST requests', () => {
