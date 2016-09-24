@@ -1,6 +1,6 @@
 # ng2-restify [![Build Status](https://travis-ci.org/Gbuomprisco/ng2-restify.svg?branch=master)](https://travis-ci.org/Gbuomprisco/ng2-restify)
 
-### Tiny REST Framework for Angular 2
+### Tiny REST Provider for Angular 2
 
 This is still very basic and experimental, package is not on NPM yet.
 
