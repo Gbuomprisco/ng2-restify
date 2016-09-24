@@ -8,6 +8,14 @@ export interface ConfigurationObject {
     cache?: boolean;
 }
 
+/**
+ * - builds a method given its type and its configuration or URL path
+ * @name Method
+ * @param method
+ * @param parameters
+ * @returns {(target:any, propertyKey:string)=>{value: ((data?:{})=>Observable<any>)}}
+ * @constructor
+ */
 export function Method(method: string, parameters: string | ConfigurationObject) {
     if (!parameters) {
         throw new Error('Please provide a valid URL, or a valid configuration object');
@@ -47,7 +55,11 @@ export function Method(method: string, parameters: string | ConfigurationObject)
     };
 }
 
-
+/**
+ * - initializes constructor
+ * @name initialize
+ * @param target
+ */
 function initialize(target) {
     if (!target.initialized) {
         target.constructor();

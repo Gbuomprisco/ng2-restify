@@ -2,7 +2,7 @@ import { Headers } from '@angular/http';
 
 
 /**
- * @GlobalHeaders
+ * @name GlobalHeaders
  * @param headers
  * @returns {(target:any)=>undefined}
  * @constructor
@@ -14,7 +14,7 @@ export function GlobalHeaders(headers: {[name: string]: string}) {
 }
 
 /**
- * @LocalHeaders
+ * @name LocalHeaders
  * @param headers
  * @returns {(target:any, name:string)=>undefined}
  * @constructor
@@ -25,6 +25,13 @@ export function LocalHeaders(headers: {[name: string]: string}) {
     };
 }
 
+/**
+ * @name mergeHeaders
+ * @param universal
+ * @param global
+ * @param local
+ * @returns {Headers}
+ */
 export function mergeHeaders(
         universal: Headers = new Headers(),
         global: Headers = new Headers(),
