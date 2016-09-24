@@ -2,7 +2,7 @@ export * from './ng2-restify';
 
 export * from './decorators/transformer';
 export * from './decorators/base-url';
-
+export * from './decorators/headers';
 export * from './decorators/methods/method';
 export * from './decorators/methods/delete';
 export * from './decorators/methods/post';

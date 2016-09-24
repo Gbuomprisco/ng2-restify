@@ -1,3 +1,7 @@
+import { Headers } from '@angular/http';
+
+const universalHeaders: Headers = new Headers();
+
 export class Configurator {
     private configuration = {};
 
@@ -8,5 +12,19 @@ export class Configurator {
 
     public getResourceConfig(method: string) {
         return this.configuration[method];
+    }
+
+    public setUniversalHeaders(headers: {[name: string]: string}) {
+        headers.forEach(header => {
+            for (let name in header) {
+                if (header.hasOwnProperty(name)) {
+                    universalHeaders.append(name, header[name]);
+                }
+            }
+        });
+    }
+
+    public getUniversalHeaders(): Headers {
+        return universalHeaders;
     }
 }

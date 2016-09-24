@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { RequestOptionsBuilder } from '../../requestOptionsBuilder';
-
+import { mergeHeaders } from '../headers';
 const Route = require('route-parser');
 
 export interface ConfigurationObject {
@@ -26,9 +26,16 @@ export function Method(method: string, parameters: string | ConfigurationObject)
 
         return {
             value: function (data = {}): Observable<any> {
+                const headers = mergeHeaders(
+                    target.configurator.getUniversalHeaders(),
+                    target.headers,
+                    configuration.headers
+                );
+
                 const options = RequestOptionsBuilder(Object.assign(configuration, {
                     method,
-                    baseUrl: this.baseUrl
+                    baseUrl: this.baseUrl,
+                    headers
                 }), data);
 
                 const config = typeof parameters === 'string' ? configuration :

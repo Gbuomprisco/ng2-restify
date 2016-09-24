@@ -5,15 +5,14 @@ import { Cache } from './cache';
 
 import 'rxjs/add/operator/map';
 
-export abstract class RestifyProvider {
-    protected configurator: Configurator;
-    protected cache: Cache;
-    protected initialized: boolean;
+export class RestifyProvider {
+    public configurator: Configurator = new Configurator();
 
-    constructor(protected http: Http) {
-        this.configurator = new Configurator();
-        this.cache = new Cache();
-    }
+    protected cache: Cache =  new Cache();
+    protected initialized: boolean;
+    protected headers: {[name: string]: string};
+
+    constructor(protected http: Http) {}
 
     protected request(options, config: any): Observable<any> {
         const req = new Request(new RequestOptions(options));

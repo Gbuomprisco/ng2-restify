@@ -10,7 +10,9 @@ import {
     Post,
     Put,
     Delete,
-    TransformResponse
+    TransformResponse,
+    GlobalHeaders,
+    LocalHeaders
 } from '../../src';
 
 @Injectable()
