@@ -1,10 +1,18 @@
 # ng2-restify [![Build Status](https://travis-ci.org/Gbuomprisco/ng2-restify.svg?branch=master)](https://travis-ci.org/Gbuomprisco/ng2-restify)
 
-## Tiny REST Framework for Angular 2
+### Tiny REST Framework for Angular 2
 
 This is still very basic and experimental, package is not on NPM yet.
 
-**Example**:
+At the moment, this library supports requests for GET, POST, PUT and DELETE.
+
+Features:
+- Set up RESTful providers on the fly
+- Set up universal, global and local headers for your requests
+- Set up Response Transformers
+- GET requests caching
+
+### Example
 
 ```javascript
 // provider
@@ -54,9 +62,7 @@ export class UsersProvider extends RestifyProvider {
 
 // component
 export class MyComponent {
-constructor(private usersProvider: UsersProvider) {}
-
-private users: User[] = [];
+    private users: User[] = [];
     private selectedUser: User;
 
     private model: User = {
@@ -120,4 +126,84 @@ private users: User[] = [];
         this.model = Object.assign({}, user);
     }
 }
+```
+
+## Set up Headers
+
+#### Universal Headers (valid for all requests done via `RestifyProvider`)
+
+You will need to import the `RestifyProvider` and set up the headers with `configurator.setUniversalHeaders`.
+
+```javascript
+@Component({
+  selector   : 'app',
+  templateUrl: './app.html',
+})
+export class AppComponent {
+    constructor(private restify: RestifyProvider) {
+        restify.configurator.setUniversalHeaders([{
+            'Authorization': 'Basic 123'
+        }]);
+    }
+}
+
+// be aware you will also need to import the ResitfyProvider in your module
+
+@NgModule({
+  providers:[UsersProvider,
+    {
+        provide: RestifyProvider,
+        useFactory: (http: Http) => {
+            return new RestifyProvider(http);
+        },
+        deps: [Http]
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+```
+
+#### Global Headers (valid for the `provider` they're used with)
+
+```javascript
+import {
+    RestifyProvider,
+    GlobalHeaders
+} from 'ng2-restify';
+
+@Injectable()
+@BaseUrl('http://localhost:3000')
+@GlobalHeaders({
+    'Content-Type': 'application/json',
+    'Authorization: 'Basic YnBjxDpib43q'
+})
+export class UsersProvider extends RestifyProvider {
+    constructor(public http: Http) {
+        super(http);
+    }
+}  
+```
+
+#### Local Headers (valid for the `method` they're used with)
+
+```javascript
+import {
+    RestifyProvider,
+    Get,
+    LocalHeaders
+} from 'ng2-restify';
+
+@Injectable()
+@BaseUrl('http://localhost:3000')
+export class UsersProvider extends RestifyProvider {
+    constructor(public http: Http) {
+        super(http);
+    }
+    
+    @LocalHeaders({
+        'Content-Type': 'application/text'
+    })
+    @Get('/users')
+    public getUsers(): Observable<Users> { return; }
+}  
 ```
