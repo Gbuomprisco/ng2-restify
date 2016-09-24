@@ -175,7 +175,7 @@ import {
 @BaseUrl('http://localhost:3000')
 @GlobalHeaders({
     'Content-Type': 'application/json',
-    'Authorization: 'Basic YnBjxDpib43q'
+    'Authorization': 'Basic YnBjxDpib43q'
 })
 export class UsersProvider extends RestifyProvider {
     constructor(public http: Http) {
