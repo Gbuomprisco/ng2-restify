@@ -1,21 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { UserTransformer } from './transformers/userTransformer';
 
-import {
-    RestifyProvider,
-    BaseUrl,
-    Get,
-    Post,
-    Put,
-    Delete,
-    TransformResponse,
-    WithCredentials,
-    Retry,
-    GlobalHeaders,
-    LocalHeaders
-} from '../../src';
+import { RestifyProvider, BaseUrl, Get, Post, Put, Delete } from '../../src';
 
 @Injectable()
 @BaseUrl('http://localhost:3000')
@@ -24,8 +11,18 @@ export class UsersProvider extends RestifyProvider {
         super(http);
     }
 
-    @Get({path: '/users/:id', cache: true})
+    @Get({path: '/users', cache: true})
     public getUsers(): Observable<any> {
+        return;
+    }
+
+    @Get({path: '/users/:id', cache: true})
+    public getUserById(params: {id: number}): Observable<any> {
+        return;
+    }
+
+    @Get('/users?name=(:name)')
+    public getUserByName(params: {name: string}): Observable<any> {
         return;
     }
 

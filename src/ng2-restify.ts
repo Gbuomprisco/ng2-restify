@@ -1,23 +1,24 @@
 import { Http, Request, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Configurator } from './configurator';
-import { Cache } from './cache';
+import { Configurator } from './services/configurator';
+import { Cache } from './services/cache';
 
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/retry';
 
-export abstract class RestifyProvider {
-    protected configurator: Configurator;
-    protected cache: Cache;
+export class RestifyProvider {
+    public configurator: Configurator = new Configurator();
+
+    protected cache: Cache =  new Cache();
     protected initialized: boolean;
+    protected headers: {[name: string]: string};
 
-    constructor(protected http: Http) {
-        this.configurator = new Configurator();
-        this.cache = new Cache();
-    }
+    constructor(protected http: Http) {}
 
     protected request(options, config: any): Observable<any> {
         const req = new Request(new RequestOptions(options));
         const transformer = config.transformer;
+        const retry = config.retry;
 
         if (config.method === 'get') {
             const cached = this.cache.get(options.url);
@@ -37,6 +38,7 @@ export abstract class RestifyProvider {
                 }
 
                 return value;
-            });
+            })
+            .retry(retry || 1);
     }
 }
