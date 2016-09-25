@@ -25,10 +25,10 @@ describe('Ng2 Restify', () => {
     });
 
     const BASE_URL = 'http://localhost:3000';
-    const usersProvider;
-    const authProvider;
-    const backend;
-    const http;
+    let usersProvider;
+    let authProvider;
+    let backend;
+    let http;
 
     beforeEach(inject([UsersProvider, MockBackend, Http, AuthProvider],
         (_usersProvider: UsersProvider, _backend: MockBackend, _http: Http, _authProvider: AuthProvider) => {

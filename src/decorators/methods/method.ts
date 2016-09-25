@@ -18,7 +18,7 @@ export interface ConfigurationObject {
  * @returns {(target:any, propertyKey:string)=>{value: ((data?:{})=>Observable<any>)}}
  * @constructor
  */
-export function Method(method: string, parameters: string | ConfigurationObject) {
+export function Method(method: string, parameters: ConfigurationObject | string) {
     if (!parameters) {
         throw new Error('Please provide a valid URL, or a valid configuration object');
     }
@@ -46,7 +46,7 @@ export function Method(method: string, parameters: string | ConfigurationObject)
                     method,
                     baseUrl: this.baseUrl,
                     headers,
-                    withCredentials: configuration.withCredentials || parameters.withCredentials
+                    withCredentials: configuration.withCredentials
                 }), data);
 
                 const config = typeof parameters === 'string' ? configuration :
