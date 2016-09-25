@@ -207,3 +207,11 @@ export class UsersProvider extends RestifyProvider {
     public getUsers(): Observable<Users> { return; }
 }  
 ```
+
+### TODO:
+- Add PATCH and JSONP methods
+- Add withCredentials header
+- Better way to send query parameters without having to define tem in the Route
+- Predefine get, update, delete and save methods for every provider created
+- Define default parameters value for methods
+- Define retries number on methods/providers
