@@ -1,4 +1,4 @@
-import { UsersProvider } from './testing-helpers';
+import { UsersProvider, AuthProvider } from './testing-helpers';
 import { TestBed, inject } from '@angular/core/testing';
 
 import { BaseRequestOptions, Response, ResponseOptions, Http, HttpModule } from '@angular/http';
@@ -10,6 +10,7 @@ describe('Ng2 Restify', () => {
             imports: [HttpModule],
             providers: [
                 UsersProvider,
+                AuthProvider,
                 MockBackend,
                 BaseRequestOptions,
                 {
@@ -23,16 +24,18 @@ describe('Ng2 Restify', () => {
         });
     });
 
-    let BASE_URL = 'http://localhost:3000';
-    let usersProvider;
-    let backend;
-    let http;
+    const BASE_URL = 'http://localhost:3000';
+    const usersProvider;
+    const authProvider;
+    const backend;
+    const http;
 
-    beforeEach(inject([UsersProvider, MockBackend, Http],
-        (_usersProvider: UsersProvider, _backend: MockBackend, _http: Http) => {
+    beforeEach(inject([UsersProvider, MockBackend, Http, AuthProvider],
+        (_usersProvider: UsersProvider, _backend: MockBackend, _http: Http, _authProvider: AuthProvider) => {
             usersProvider = _usersProvider;
             backend = _backend;
             http = _http;
+            authProvider = _authProvider;
     }));
 
     describe('Basic properties', () => {
@@ -189,6 +192,78 @@ describe('Ng2 Restify', () => {
 
             usersProvider.deleteUser({id: 10}).subscribe(data => {
                 expect(data).toEqual(response);
+                done();
+            });
+        });
+    });
+
+    describe('Headers', () => {
+        beforeEach(function () {
+            usersProvider.configurator.setUniversalHeaders([{
+                'Authorization': 'Bearer 123',
+                'Content-Type': 'application/whatever'
+            }]);
+        });
+
+        it('Sets a universal headers', done => {
+            backend.connections.subscribe((connection: MockConnection) => {
+                let options = new ResponseOptions({
+                    body: JSON.stringify({success: true})
+                });
+
+                // match universal headers
+                expect(connection.request.headers.get('Authorization')).toEqual('Bearer 123');
+                expect(connection.request.headers.get('Content-Type')).toEqual('application/text');
+
+                expect(connection.request.method).toEqual(1);
+                expect(connection.request.url).toEqual(BASE_URL + '/signin');
+
+                connection.mockRespond(new Response(options));
+            });
+
+            authProvider.signIn({name: 'mr-robot', password: '05/09'}).subscribe(data => {
+                expect(data).toEqual({success: true});
+                done();
+            });
+        });
+
+        it('Universal headers are overridden by local and global header', done => {
+            backend.connections.subscribe((connection: MockConnection) => {
+                let options = new ResponseOptions({
+                    body: JSON.stringify({success: true})
+                });
+
+                // overridden by local header
+                expect(connection.request.headers.get('Authorization')).toEqual('Basic 123');
+
+                // overidden by global and then local header
+                expect(connection.request.headers.get('Content-Type')).toEqual('application/json');
+
+                expect(connection.request.method).toEqual(0);
+                expect(connection.request.url).toEqual(BASE_URL + '/whoami');
+
+                connection.mockRespond(new Response(options));
+            });
+
+            authProvider.whoAmI().subscribe(data => {
+                expect(data).toEqual({success: true});
+                done();
+            });
+        });
+    });
+
+    describe('Flags', () => {
+        it('Sets withCredentials flag as true', done => {
+            backend.connections.subscribe((connection: MockConnection) => {
+                let options = new ResponseOptions({
+                    body: JSON.stringify({success: true})
+                });
+
+                expect(connection.request.withCredentials).toBe(true);
+                connection.mockRespond(new Response(options));
+            });
+
+            authProvider.signIn().subscribe(() => {
                 done();
             });
         });

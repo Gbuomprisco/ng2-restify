@@ -1,12 +1,13 @@
 import { Observable } from 'rxjs/Observable';
-import { RequestOptionsBuilder } from '../../requestOptionsBuilder';
-import { mergeHeaders } from '../headers';
+import { RequestOptionsBuilder } from '../../services/requestOptionsBuilder';
+import { mergeHeaders } from '../options/headers';
 
 const Route = require('route-parser');
 
 export interface ConfigurationObject {
     path: string;
     cache?: boolean;
+    withCredentials?: boolean;
 }
 
 /**
@@ -41,10 +42,11 @@ export function Method(method: string, parameters: string | ConfigurationObject)
                     configuration.headers
                 );
 
-                const options = RequestOptionsBuilder(Object.assign(configuration, {
+                const options = RequestOptionsBuilder(Object.assign({}, configuration, {
                     method,
                     baseUrl: this.baseUrl,
-                    headers
+                    headers,
+                    withCredentials: configuration.withCredentials || parameters.withCredentials
                 }), data);
 
                 const config = typeof parameters === 'string' ? configuration :

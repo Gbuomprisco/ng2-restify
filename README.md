@@ -207,3 +207,75 @@ export class UsersProvider extends RestifyProvider {
     public getUsers(): Observable<Users> { return; }
 }  
 ```
+
+
+## Further Options
+
+#### Retry
+Set the number of times a request should be retried if throwing an error. By default it is 1.
+
+```javascript
+import {
+    RestifyProvider,
+    Get,
+    Retry
+} from 'ng2-restify';
+
+@Injectable()
+@BaseUrl('http://localhost:3000')
+export class UsersProvider extends RestifyProvider {
+    constructor(public http: Http) {
+        super(http);
+    }
+    
+    @Retry(3)
+    @Get('/users')
+    public getUsers(): Observable<Users> { return; }
+}  
+```
+
+#### WithCredentials
+Set the withCredentials header in the request.
+
+```javascript
+import {
+    RestifyProvider,
+    Post,
+    WithCredentials
+} from 'ng2-restify';
+
+@Injectable()
+@BaseUrl('http://localhost:3000')
+export class UsersProvider extends RestifyProvider {
+    constructor(public http: Http) {
+        super(http);
+    }
+    
+    @WithCredentials()
+    @Post('/login')
+    public login(creds): Observable<Users> { return; }
+}  
+```
+
+#### ResponseType
+Set the withCredentials flag in the request.
+
+```javascript
+import {
+    RestifyProvider,
+    Get,
+    ResponseType
+} from 'ng2-restify';
+
+@Injectable()
+@BaseUrl('http://localhost:3000')
+export class UsersProvider extends RestifyProvider {
+    constructor(public http: Http) {
+        super(http);
+    }
+    
+    @ResponseType('text')
+    @Post('/user')
+    public createUser(user): Observable<Users> { return; }
+}  
+```
