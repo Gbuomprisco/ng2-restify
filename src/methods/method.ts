@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { RequestOptionsBuilder } from '../../services/requestOptionsBuilder';
+import { RequestOptionsBuilder } from '../services/requestOptionsBuilder';
 import { mergeHeaders } from '../options/headers';
 
 const Route = require('route-parser');

@@ -1,17 +1,16 @@
 export {
     RestifyProvider,
-
-    Get,
-    Post,
     Put,
+    Get,
     Delete,
-
+    Post,
     TransformResponse,
     WithCredentials,
     Retry,
-    BaseUrl,
-    ResponseType,
-
+    GlobalHeaders,
     LocalHeaders,
-    GlobalHeaders
-} from './src/index';
+    BaseUrl,
+    ResponseType
+} from './src';
+
+
