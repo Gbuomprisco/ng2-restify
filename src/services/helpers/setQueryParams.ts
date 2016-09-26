@@ -1,8 +1,9 @@
 import { URLSearchParams } from '@angular/http';
 
-interface Params {
+export declare interface QueryParams {
     [name: string]: string;
 }
+
 
 /**
  * @name setQueryParams
@@ -10,7 +11,7 @@ interface Params {
  * @param matchedParams {Params}
  * @returns {URLSearchParams}
  */
-export default function setQueryParams(params: Params, matchedParams: Params): URLSearchParams {
+export function setQueryParams(params: QueryParams, matchedParams: QueryParams): URLSearchParams {
     const query = new URLSearchParams();
 
     for (let parameter in params) {
