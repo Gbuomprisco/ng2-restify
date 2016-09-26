@@ -3,8 +3,9 @@
     "module": "commonjs",
     "target": "es5",
     "outDir": "dist",
+    "removeComments": true,
     "sourceMap": true,
-    "noEmit": true,
+    "noEmit": false,
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -16,10 +17,11 @@
      ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts"
   ],
-  "files": [
-      "index"
+  "include": [
+    "src/**/*"
   ],
   "awesomeTypescriptLoaderOptions": {
     "useWebpackText": true
