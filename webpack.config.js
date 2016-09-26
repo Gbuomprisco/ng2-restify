@@ -12,7 +12,7 @@ var webpackConfig = {
             "rxjs/add/operator/map",
             "rxjs/add/operator/retry"
         ],
-        'ng2-restify': './src/index.ts'
+        'ng2-restify': './index.ts'
     },
 
     output: {
