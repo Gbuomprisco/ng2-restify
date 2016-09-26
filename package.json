@@ -1,6 +1,6 @@
 {
   "name": "ng2-restify",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tiny REST Framework for Angular 2",
   "scripts": {
     "build": "webpack --inline --colors --progress --display-error-details --display-cached",
