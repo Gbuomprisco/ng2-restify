@@ -67,7 +67,7 @@
     "url": "https://github.com/Gbuomprisco/ng2-restify/issues"
   },
   "homepage": "https://github.com/Gbuomprisco/ng2-restify#readme",
-  "main": "./dist/index.js",
+  "main": "./dist/ng2-restify.bundle.js",
   "files": [
     "dist"
   ]

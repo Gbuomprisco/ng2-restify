@@ -1,65 +1,114 @@
 var webpack = require('webpack');
 var path = require('path');
 
-
 // Webpack Config
 var webpackConfig = {
-  entry: {
-    'polyfills': './demo/polyfills.browser.ts',
-    'vendor':    './demo/vendor.browser.ts',
-    'main':       './demo/main.browser.ts',
-  },
+    entry: {
+        'vendor': [
+            '@angular/core', '@angular/http',
+            "route-parser",
+            "rxjs/Observable",
+            "rxjs/add/observable/of",
+            "rxjs/add/operator/map",
+            "rxjs/add/operator/retry"
+        ],
+        'ng2-restify': './src/index.ts'
+    },
 
-  output: {
-    path: './dist',
-  },
+    output: {
+        path: './dist',
+        libraryTarget: "umd",
+        library: 'ng2-restify',
+        umdNamedRequire: true
+    },
 
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(true),
-    new webpack.optimize.CommonsChunkPlugin({ name: ['main', 'vendor', 'polyfills'], minChunks: Infinity }),
-  ],
+    externals: {
+        "@angular/core": true,
+        "@angular/http": true,
+        "route-parser": true,
+        "rxjs/Observable": true,
+        "rxjs/add/observable/of": true,
+        "rxjs/add/operator/map": true,
+        "rxjs/add/operator/retry": true
+    },
 
-  module: {
-    loaders: [
-      // .ts files for TypeScript
-      { test: /\.ts$/, loaders: ['awesome-typescript-loader', 'angular2-template-loader'] },
-      { test: /\.css$/, loaders: ['to-string-loader', 'css-loader'] },
-      { test: /\.html$/, loader: 'raw-loader' }
-    ]
-  }
+    plugins: [
+        //new webpack.optimize.CommonsChunkPlugin({ name: [], minChunks: Infinity })
+    ],
 
+    tslint: {
+        emitErrors: false,
+        failOnHint: false,
+        resourcePath: 'src'
+    },
+
+    module: {
+        loaders: [
+            // .ts files for TypeScript
+            {
+                test: /\.ts$/,
+                loader: 'awesome-typescript-loader'
+            }
+        ]
+    }
 };
 
 
 // Our Webpack Defaults
 var defaultConfig = {
-  devtool: 'cheap-module-source-map',
-  cache: true,
-  debug: true,
-  output: {
-    filename: '[name].bundle.js',
-    sourceMapFilename: '[name].map',
-    chunkFilename: '[id].chunk.js'
-  },
+    devtool: 'cheap-module-source-map',
+    cache: true,
+    debug: true,
+    output: {
+        filename: '[name].bundle.js',
+        sourceMapFilename: '[name].map',
+        chunkFilename: '[name].chunk.js'
+    },
 
-  resolve: {
-    root: [ path.join(__dirname, 'src') ],
-    extensions: ['', '.ts', '.js']
-  },
+    module: {
+        preLoaders: [
+            {
+                test: /\.js$/,
+                loader: 'source-map-loader',
+                exclude: [
+                    // these packages have problems with their sourcemaps
+                    path.join(__dirname, 'node_modules', 'rxjs'),
+                    path.join(__dirname, 'node_modules', '@angular')
+                ]
+            }
+        ],
+        noParse: [
+            path.join(__dirname, 'node_modules', 'zone.js', 'dist'),
+            path.join(__dirname, 'node_modules', 'angular2', 'bundles')
+        ]
+    },
 
-  devServer: {
-    historyApiFallback: true,
-    watchOptions: { aggregateTimeout: 300, poll: 1000 }
-  },
+    resolve: {
+        root: [ path.join(__dirname, 'demo') ],
+        extensions: ['', '.ts', '.js'],
+        alias: {
+            'angular2/testing': path.join(__dirname, 'node_modules', '@angular', 'core', 'testing.js'),
+            'angular2/core': path.join(__dirname, 'node_modules', '@angular', 'core', 'index.js'),
+            'angular2/platform/browser': path.join(__dirname, 'node_modules', '@angular', 'platform-browser', 'index.js'),
+            'angular2/router': path.join(__dirname, 'node_modules', '@angular', 'router', 'index.js'),
+            'angular2/http': path.join(__dirname, 'node_modules', '@angular', 'http', 'index.js'),
+            'angular2/http/testing': path.join(__dirname, 'node_modules', '@angular', 'http', 'testing.js')
+        },
+    },
 
-  node: {
-    global: 1,
-    crypto: 'empty',
-    module: 0,
-    Buffer: 0,
-    clearImmediate: 0,
-    setImmediate: 0
-  }
+    devServer: {
+        historyApiFallback: true,
+        watchOptions: { aggregateTimeout: 300, poll: 1000 }
+    },
+
+    node: {
+        global: 1,
+        crypto: 'empty',
+        module: 0,
+        Buffer: 0,
+        clearImmediate: 0,
+        setImmediate: 0
+    }
 };
 
 var webpackMerge = require('webpack-merge');
