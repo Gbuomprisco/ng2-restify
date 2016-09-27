@@ -1,5 +1,4 @@
 export {
-    RestifyProvider,
     Put,
     Get,
     Delete,
@@ -11,6 +10,9 @@ export {
     LocalHeaders,
     BaseUrl,
     ResponseType
-} from './src';
+} from './dist';
 
+export {
+    RestifyProvider
+} from './dist/src/ng2-restify';
 
