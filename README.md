@@ -2,17 +2,46 @@
 
 ### Tiny REST Provider for Angular 2
 
-This is still very basic and experimental, package is not on NPM yet.
+**This is still very basic and experimental. I do not recommend using it in production.**
 
-At the moment, this library supports requests for GET, POST, PUT and DELETE.
-
-Features:
+#### What this provider does
 - Set up RESTful providers on the fly
 - Set up universal, global and local headers for your requests
 - Set up Response Transformers
 - GET requests caching
 
+#### What this provider doesn't do
+At the moment, this library supports requests for GET, POST, PUT and DELETE.
+
+Support for JSON, HEAD and PATCH is planned.
+
+## How to install it
+Just run in your terminal:
+
+    npm install ng2-restify --save
+
+## Set provider up
+Suppose you're setting up the library in your component `AppComponent`: 
+
+```javascript
+@NgModule({
+  providers:[UsersProvider,
+    {
+        provide: RestifyProvider,
+        useFactory: (http: Http) => {
+            return new RestifyProvider(http);
+        },
+        deps: [Http]
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+```
+
 ### Example
+
+##### Create a Provider
+The provider needs to extend `RestifyProvider`. Set it as follows:
 
 ```javascript
 // provider
@@ -59,8 +88,10 @@ export class UsersProvider extends RestifyProvider {
         return;
     }
 }
+```
 
-// component
+##### Create a Component that uses `RestifyProvider`
+```javascript
 export class MyComponent {
     private users: User[] = [];
     private selectedUser: User;
@@ -128,7 +159,9 @@ export class MyComponent {
 }
 ```
 
-## Set up Headers
+## Further Options
+
+### Headers
 
 #### Universal Headers (valid for all requests done via `RestifyProvider`)
 
@@ -146,21 +179,6 @@ export class AppComponent {
         }]);
     }
 }
-
-// be aware you will also need to import the ResitfyProvider in your module
-
-@NgModule({
-  providers:[UsersProvider,
-    {
-        provide: RestifyProvider,
-        useFactory: (http: Http) => {
-            return new RestifyProvider(http);
-        },
-        deps: [Http]
-    }
-  ],
-  bootstrap: [AppComponent]
-})
 ```
 
 #### Global Headers (valid for the `provider` they're used with)
@@ -207,9 +225,6 @@ export class UsersProvider extends RestifyProvider {
     public getUsers(): Observable<Users> { return; }
 }  
 ```
-
-
-## Further Options
 
 #### Retry
 Set the number of times a request should be retried if throwing an error. By default it is 1.
@@ -279,10 +294,8 @@ export class UsersProvider extends RestifyProvider {
     public createUser(user): Observable<Users> { return; }
 }  
 ```
+
 ### TODO:
-- Add PATCH and JSONP methods
-- Add withCredentials header
-- Better way to send query parameters without having to define tem in the Route
-- Predefine get, update, delete and save methods for every provider created
+- Add PATCH, HEAD and JSONP methods
+- Predefine get, update, delete and save methods for methods with @Resource
 - Define default parameters value for methods
-- Define retries number on methods/providers
