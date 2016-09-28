@@ -61,7 +61,7 @@ describe('Ng2 Restify', () => {
             usersProvider.getUsers().subscribe(data => {
                 expect(data).toEqual(response);
 
-                const cached = usersProvider.cache.get(BASE_URL + '/users');
+                const cached = usersProvider.cache.get('/users');
 
                 // data is cached
                 expect(cached).toBeDefined();
@@ -200,6 +200,30 @@ describe('Ng2 Restify', () => {
         });
     });
 
+    describe('Cache', () => {
+        it('should perform a GET request and then uncache the response using its URL', done => {
+            backend.connections.subscribe((connection: MockConnection) => {
+                let options = new ResponseOptions({
+                    body: JSON.stringify({ success: true })
+                });
+                connection.mockRespond(new Response(options));
+            });
+
+            usersProvider.getUsers().subscribe(data => {
+                const cached = usersProvider.cache.get('/users');
+
+                // data is cached
+                expect(cached.value).toEqual(data);
+
+                // invalidate data
+                usersProvider.invalidate('/users');
+                expect(usersProvider.cache.get('/users')).not.toBeDefined();
+
+                done();
+            });
+        });
+    });
+
     describe('Headers', () => {
         beforeEach(function () {
             usersProvider.configurator.setUniversalHeaders([{
@@ -270,5 +294,9 @@ describe('Ng2 Restify', () => {
                 done();
             });
         });
+    });
+
+    describe('Resource/Actions', () => {
+       // TODO
     });
 });

@@ -1,4 +1,6 @@
 import { Observable } from 'rxjs/Observable';
+const Route = require('route-parser');
+
 import 'rxjs/add/observable/of';
 
 export class Cache {
@@ -26,9 +28,9 @@ export class Cache {
 
 	/**
      * @name invalidate
-     * @param item
+     * @param key
      */
-    public invalidate(item: string): void {
-        this.items[item] = undefined;
+    public invalidate(key: string): void {
+        this.items[key] = undefined;
     }
 }

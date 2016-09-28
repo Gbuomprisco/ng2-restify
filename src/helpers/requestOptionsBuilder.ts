@@ -26,7 +26,7 @@ export function RequestOptionsBuilder(config: any, params: any): RequestOptions 
     const search = config.method === 'get' ? setQueryParams(params, paramsMatched) : undefined;
     const responseType = setResponseType(config.responseType);
 
-    return Object.assign({
+    return Object.assign({}, {
         url,
         method: config.method,
         headers,
