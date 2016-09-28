@@ -20,6 +20,7 @@ export class RestifyProvider {
 
     protected resource: string;
     protected cache: Cache = new Cache();
+    protected baseUrl: string;
 
     constructor(protected http: Http) {}
 
@@ -35,7 +36,7 @@ export class RestifyProvider {
         const retry = config.retry;
 
         if (config.method === 'get') {
-            const cached = this.cache.get(options.url);
+            const cached = this.cache.get(config.path);
 
             if (cached) {
                 return cached;
@@ -48,7 +49,7 @@ export class RestifyProvider {
                 const value = transformer ? transformer(data) : data.json();
 
                 if (config.cache) {
-                    this.cache.put(options.url, value);
+                    this.cache.put(config.path, value);
                 }
 
                 return value;
@@ -63,9 +64,19 @@ export class RestifyProvider {
     private createResourceMethods(): void {
         const target = this;
         Object.keys(METHODS_MAP).forEach(method => {
+            const action = Builder(target, method, METHODS_MAP[method], { path: target.resource }).value;
+
             Object.assign(target, {
-                [METHODS_MAP[method]]: Builder(target, method, METHODS_MAP[method], { path: target.resource }).value
+                [METHODS_MAP[method]]: action
             });
         });
+    }
+
+    /**
+     * @name invalidate
+     * @param key
+     */
+    public invalidate(key: string): void {
+        this.cache.invalidate(key);
     }
 }

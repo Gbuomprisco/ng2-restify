@@ -159,12 +159,91 @@ export class MyComponent {
 }
 ```
 
+### Resource and Action
+
+Let's rewrite the same example using `@Resource` (and `@Action`, optionally). This is our `UsersProvider` rewritten in a few lines of code:
+
+```javascript
+
+//...imports...
+
+@Injectable()
+@BaseUrl('http://localhost:3000')
+@Resource('/users/(:id)')
+export class UsersProvider extends RestifyProvider {
+    constructor(public http: Http) {
+        super(http);
+    }
+
+    @Get()
+    @Action('/profile')
+    public getProfile(): Observable<any> {
+        return;
+    }
+}
+```
+
+This is the body of our component. As you can, I replaced `createUser` with `save`,
+`deleteUser` with `delete`, `updateUser` with `update` and finally `getUser` with `get`.
+
+Indeed, if you specify the `@Resource` path (and eventual optional path segments), the provider is populated
+with these 4 methods built in, which is easy and quick for non-complex providers.
+
+```javascript
+// imports...
+// @Component...
+
+private createUser() {
+    const {name, surname} = this.model;
+
+    this.usersProvider
+        .save({name, surname})
+        .subscribe(data => {
+            this.users.push(data);
+        });
+}
+
+public submit() {
+    if (this.selectedUser) {
+        this.updateUser();
+    } else {
+        this.createUser();
+    }
+}
+
+public updateUser() {
+    const {name, surname} = this.model;
+
+    this.selectedUser = Object.assign({}, this.selectedUser, {
+        name,
+        surname
+    });
+
+    this.usersProvider
+        .update(this.selectedUser)
+        .subscribe(user => {
+            const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+            this.users[index] = user;
+        });
+}
+
+public deleteUser(id: number) {
+    this.usersProvider
+        .delete({id})
+        .subscribe(user => {
+            const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+            this.users.splice(index, 1);
+        });
+}
+```
+
 ## Further Options
 
 ### Headers
 
-#### Universal Headers (valid for all requests done via `RestifyProvider`)
+#### Universal Headers
 
+Universal Headers are valid for all requests done via `RestifyProvider`.
 You will need to import the `RestifyProvider` and set up the headers with `configurator.setUniversalHeaders`.
 
 ```javascript
@@ -181,7 +260,9 @@ export class AppComponent {
 }
 ```
 
-#### Global Headers (valid for the `provider` they're used with)
+#### Global Headers
+
+Global Headers are valid for all the methods in the `provider` they're used with
 
 ```javascript
 import {
@@ -202,7 +283,9 @@ export class UsersProvider extends RestifyProvider {
 }
 ```
 
-#### Local Headers (valid for the `method` they're used with)
+#### Local Headers
+
+Local Headers are only valid for the `method` they're used with
 
 ```javascript
 import {
@@ -295,85 +378,15 @@ export class UsersProvider extends RestifyProvider {
 }  
 ```
 
-#### Resource and Action
-
-Let's rewrite the first example using @Resource (and @Action, optionally):
-
-This is our `UsersProvider`:
+#### Invalidate Cache
+When you want to invalidate your cache, just pass the path of a method to the `invalidate` method of your provider:
 
 ```javascript
-
-//...imports...
-
-@Injectable()
-@BaseUrl('http://localhost:3000')
-@Resource('/users/(:id)')
-export class UsersProvider extends RestifyProvider {
-    constructor(public http: Http) {
-        super(http);
-    }
-
-    @Get()
-    @Action('/profile')
-    public getProfile(): Observable<any> {
-        return;
-    }
+private invalidateGetUsers() {
+    this.usersProvider.invalidate('/users');
 }
 ```
 
-This is the body of our component. As you can, I replaced `createUser` with `save`,
-`deleteUser` with `delete`, `updateUser` with `update` and finally `getUser` with `get`.
-
-Indeed, if you specify the `@Resource` path (and eventual optional path segments), the provider is populated
-with these 4 methods built in, which is easy and quick for non-complex providers.
-
-```javascript
-// imports...
-// @Component...
-
-private createUser() {
-    const {name, surname} = this.model;
-
-    this.usersProvider
-        .save({name, surname})
-        .subscribe(data => {
-            this.users.push(data);
-        });
-}
-
-public submit() {
-    if (this.selectedUser) {
-        this.updateUser();
-    } else {
-        this.createUser();
-    }
-}
-
-public updateUser() {
-    const {name, surname} = this.model;
-
-    this.selectedUser = Object.assign({}, this.selectedUser, {
-        name,
-        surname
-    });
-
-    this.usersProvider
-        .update(this.selectedUser)
-        .subscribe(user => {
-            const index = this.users.findIndex(user => this.selectedUser.id === user.id);
-            this.users[index] = user;
-        });
-}
-
-public deleteUser(id: number) {
-    this.usersProvider
-        .delete({id})
-        .subscribe(user => {
-            const index = this.users.findIndex(user => this.selectedUser.id === user.id);
-            this.users.splice(index, 1);
-        });
-}
-```
 
 ### Routes Syntax
 Under the hood, `ng2-restify` uses the great library [Route Parser](https://github.com/rcs/route-parser). Please have a look at it to know how to define your routes.

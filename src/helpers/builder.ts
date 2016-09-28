@@ -48,7 +48,7 @@ export function Builder(
             }), data);
 
             // return Observable
-            return this.request(options, isConfigAnObject ? Object.assign(configuration, parameters) : configuration);
+            return this.request(options, isConfigAnObject ? Object.assign({}, configuration, parameters) : configuration);
         }
     };
 }
