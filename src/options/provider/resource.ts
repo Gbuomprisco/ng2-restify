@@ -1,3 +1,4 @@
+
 /**
  * - sets the base URL for the whole provider
  * @name Resource
@@ -8,6 +9,6 @@
 export function Resource(path: string) {
     return function(target) {
         target.prototype.resource = path;
-        target.prototype.createActions();
+        target.prototype.createResourceMethods();
     };
 }

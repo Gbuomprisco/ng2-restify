@@ -1,6 +1,6 @@
 {
   "name": "ng2-restify",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Tiny REST Framework for Angular 2",
   "scripts": {
     "build": "webpack --inline --colors --progress --display-error-details --display-cached",
@@ -57,7 +57,8 @@
     "zone.js": "~0.6.23"
   },
   "dependencies": {
-    "route-parser": "0.0.5"
+    "route-parser": "0.0.5",
+    "url-join": "^1.1.0"
   },
   "keywords": [],
   "repository": {

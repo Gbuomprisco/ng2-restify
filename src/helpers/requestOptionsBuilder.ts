@@ -3,6 +3,8 @@ import { RequestOptions } from '@angular/http';
 import { QueryParams, setQueryParams } from './setQueryParams';
 import setResponseType from './setResponseType';
 
+const urlJoin = require('url-join');
+
 /**
  * @name RequestOptionsBuilder
  * @param config
@@ -19,7 +21,7 @@ export function RequestOptionsBuilder(config: any, params: any): RequestOptions 
             do not match the Route provided ${config.path.spec}`);
     }
 
-    const url = config.baseUrl + path;
+    const url = urlJoin(config.baseUrl, path);
     const headers = config.headers || {};
     const search = config.method === 'get' ? setQueryParams(params, paramsMatched) : undefined;
     const responseType = setResponseType(config.responseType);

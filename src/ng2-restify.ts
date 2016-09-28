@@ -58,9 +58,9 @@ export class RestifyProvider {
 
 	/**
      * - generates methods when @Resource is called
-     * @name createActions
+     * @name createResourceMethods
      */
-    private createActions(): void {
+    private createResourceMethods(): void {
         const target = this;
         Object.keys(METHODS_MAP).forEach(method => {
             Object.assign(target, {
