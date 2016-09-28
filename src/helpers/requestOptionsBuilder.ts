@@ -1,7 +1,7 @@
 import { RequestOptions } from '@angular/http';
 
-import { QueryParams, setQueryParams } from './helpers/setQueryParams';
-import setResponseType from './helpers/setResponseType';
+import { QueryParams, setQueryParams } from './setQueryParams';
+import setResponseType from './setResponseType';
 
 /**
  * @name RequestOptionsBuilder

@@ -113,7 +113,7 @@ export class MyComponent {
         const {name, surname} = this.model;
 
         this.usersProvider
-            .createUser({name, surname})
+            .createUser({name, surname}) // (or save, if using @Resource)
             .subscribe(data => {
                 this.users.push(data);
             });
@@ -295,7 +295,86 @@ export class UsersProvider extends RestifyProvider {
 }  
 ```
 
+#### Resource and Action
+
+Let's rewrite the first example using @Resource (and @Action, optionally):
+
+This is our `UsersProvider`:
+
+```javascript
+
+//...imports...
+
+Injectable()
+@BaseUrl('http://localhost:3000')
+@Resource('/users/(:id)')
+export class UsersProvider extends RestifyProvider {
+    constructor(public http: Http) {
+        super(http);
+    }
+
+    @Post()
+    @Action('/profile')
+    public getProfile(): Observable<any> {
+        return;
+    }
+}
+```
+
+This is the body of our component. As you can, I replaced `createUser` with `save`,
+`deleteUser` with `delete`, `updateUser` with `update` and finally `getUser` with `get`.
+
+Indeed, if you specify the `@Resource` path (and eventual optional path segments), the provider is populated
+with these 4 methods built in, which is easy and quick for non-complex providers.
+
+```javascript
+// imports...
+// @Component...
+
+private createUser() {
+    const {name, surname} = this.model;
+
+    this.usersProvider
+        .save({name, surname})
+        .subscribe(data => {
+            this.users.push(data);
+        });
+}
+
+public submit() {
+    if (this.selectedUser) {
+        this.updateUser();
+    } else {
+        this.createUser();
+    }
+}
+
+public updateUser() {
+    const {name, surname} = this.model;
+
+    this.selectedUser = Object.assign({}, this.selectedUser, {
+        name,
+        surname
+    });
+
+    this.usersProvider
+        .update(this.selectedUser)
+        .subscribe(user => {
+            const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+            this.users[index] = user;
+        });
+}
+
+public deleteUser(id: number) {
+    this.usersProvider
+        .delete({id})
+        .subscribe(user => {
+            const index = this.users.findIndex(user => this.selectedUser.id === user.id);
+            this.users.splice(index, 1);
+        });
+}
+```
+
 ### TODO:
 - Add PATCH, HEAD and JSONP methods
-- Predefine get, update, delete and save methods for methods with @Resource
 - Define default parameters value for methods

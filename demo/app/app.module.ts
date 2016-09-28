@@ -9,13 +9,15 @@ import {HttpModule, Http} from '@angular/http';
 import {Home} from './home/home';
 
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
-import {UsersProvider} from './provider';
-import {RestifyProvider} from '../../src/index';
+import {UsersProvider, UsersProviderWithResource} from './userProvider';
+import {RestifyProvider} from '../../src';
 
 @NgModule({
   declarations: [AppComponent, Home],
   imports     : [BrowserModule, FormsModule, HttpModule, RouterModule.forRoot(rootRouterConfig)],
-  providers   : [UsersProvider,
+  providers   : [
+      UsersProvider,
+      UsersProviderWithResource,
         {
             provide: RestifyProvider,
             useFactory: (http: Http) => {

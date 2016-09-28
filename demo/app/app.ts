@@ -3,7 +3,7 @@ import {RestifyProvider} from '../../src/index';
 
 @Component({
   selector   : 'app',
-  templateUrl: './app.html',
+  template: require('./app.html'),
 })
 export class AppComponent {
     constructor(private restify: RestifyProvider) {

@@ -11,7 +11,7 @@ var webpackConfig = {
   },
 
   output: {
-    path: './dist',
+    path: './demo-dist',
   },
 
   plugins: [
