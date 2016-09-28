@@ -305,7 +305,7 @@ This is our `UsersProvider`:
 
 //...imports...
 
-Injectable()
+@Injectable()
 @BaseUrl('http://localhost:3000')
 @Resource('/users/(:id)')
 export class UsersProvider extends RestifyProvider {
@@ -313,7 +313,7 @@ export class UsersProvider extends RestifyProvider {
         super(http);
     }
 
-    @Post()
+    @Get()
     @Action('/profile')
     public getProfile(): Observable<any> {
         return;
@@ -375,6 +375,10 @@ public deleteUser(id: number) {
 }
 ```
 
+### Routes Syntax
+Under the hood, `ng2-restify` uses the great library [Route Parser](https://github.com/rcs/route-parser). Please have a look at it to know how to define your routes.
+
 ### TODO:
 - Add PATCH, HEAD and JSONP methods
 - Define default parameters value for methods
+- ... Please open an issue for feature requests/bugs
