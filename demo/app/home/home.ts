@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UsersProvider} from '../provider';
+import { UsersProvider, UsersProviderWithResource} from '../userProvider';
 
 interface User {
     name: string;
@@ -9,8 +9,8 @@ interface User {
 
 @Component({
   selector: 'home',
-  styleUrls: ['./home.css'],
-  templateUrl: './home.html'
+  styles: [require('./home.css').toString()],
+  template: require('./home.html')
 })
 export class Home implements OnInit {
     private users: User[] = [];
@@ -21,11 +21,15 @@ export class Home implements OnInit {
         surname: <string>undefined
     };
 
-    constructor(private usersProvider: UsersProvider) {}
+    constructor(private usersProvider: UsersProviderWithResource) {}
 
     public ngOnInit() {
-       this.usersProvider
-           .getUsers()
+        this.usersProvider
+            .getProfile()
+            .subscribe(profile => console.log(profile));
+
+        this.usersProvider
+           .get()
            .subscribe(users => this.users = users);
     }
 
@@ -33,7 +37,7 @@ export class Home implements OnInit {
         const {name, surname} = this.model;
 
         this.usersProvider
-            .createUser({name, surname})
+            .save({name, surname})
             .subscribe(data => {
                 this.users.push(data);
             });
@@ -56,7 +60,7 @@ export class Home implements OnInit {
         });
 
         this.usersProvider
-            .updateUser(this.selectedUser)
+            .update(this.selectedUser)
             .subscribe(user => {
                 const index = this.users.findIndex(user => this.selectedUser.id === user.id);
                 this.users[index] = user;
@@ -65,14 +69,14 @@ export class Home implements OnInit {
 
     public deleteUser(id: number) {
         this.usersProvider
-            .deleteUser({id})
+            .delete({id})
             .subscribe(user => {
                 const index = this.users.findIndex(user => this.selectedUser.id === user.id);
                 this.users.splice(index, 1);
             });
     }
 
-    public selectUser(user: User) {
+    public selectUser(user) {
         this.selectedUser = user;
         this.model = Object.assign({}, user);
     }

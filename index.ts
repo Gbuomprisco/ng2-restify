@@ -9,7 +9,9 @@ export {
     GlobalHeaders,
     LocalHeaders,
     BaseUrl,
-    ResponseType
+    ResponseType,
+    Action,
+    Resource
 } from './dist';
 
 export {

@@ -61,8 +61,11 @@ describe('Ng2 Restify', () => {
             usersProvider.getUsers().subscribe(data => {
                 expect(data).toEqual(response);
 
+                const cached = usersProvider.cache.get(BASE_URL + '/users');
+
                 // data is cached
-                expect(usersProvider.cache.get(BASE_URL + '/users').value).toEqual(data);
+                expect(cached).toBeDefined();
+                expect(cached.value).toEqual(data);
 
                 done();
             });

@@ -5,6 +5,11 @@ const universalHeaders: Headers = new Headers();
 export class Configurator {
     private configuration = {};
 
+    public createResource(method: string): Configurator {
+        this.configuration[method] = this.configuration[method] || {};
+        return this;
+    }
+
 	/**
      * - sets a parameter (name, value) for a method
      * @name setResourceParameter
@@ -12,9 +17,11 @@ export class Configurator {
      * @param method
      * @param value
      */
-    public setResourceParameter(parameter: string, method: string, value: string) {
-        this.configuration[method] = this.configuration[method] || {};
+    public setResourceParameter(parameter: string, method: string, value: any): Configurator {
+        this.configuration[method] = this.configuration[method] || this.createResource(method).getResourceConfig(method);
         this.configuration[method][parameter] = value;
+
+        return this;
     }
 
 	/**
@@ -31,7 +38,7 @@ export class Configurator {
      * @name setUniversalHeaders
      * @param headers
      */
-    public setUniversalHeaders(headers: {[name: string]: string}[]) {
+    public setUniversalHeaders(headers: {[name: string]: string}[]): Configurator {
         headers.forEach(header => {
             for (let name in header) {
                 if (header.hasOwnProperty(name)) {
@@ -39,6 +46,8 @@ export class Configurator {
                 }
             }
         });
+
+        return this;
     }
 
 	/**
