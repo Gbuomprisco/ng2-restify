@@ -1,4 +1,5 @@
 import { ConfigurationObject } from './method';
+const urlJoin = require('url-join');
 
 /**
  * @name getPath
@@ -10,7 +11,7 @@ export function getPath(configuration: any, parameters: string | ConfigurationOb
     let path: string = typeof parameters === 'string' ? parameters : parameters.path;
 
     if (configuration.action) {
-        path += configuration.action;
+        path = urlJoin(path, configuration.action);
     }
 
     return path;
